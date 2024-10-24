@@ -7,24 +7,22 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 
-@Entity
+@Entity(name = "faculties")
 data class Faculty(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = -1,
     val name: String,
     @OneToMany(mappedBy = "faculty", cascade = [CascadeType.ALL])
-    val groups: List<Group> = emptyList()
+    val groups: MutableList<Group> = mutableListOf()
 )
 
 data class FacultyDTO(
     val id: Long,
-    val name: String,
-    val groups: List<GroupDTO>
+    val name: String
 )
 
 fun Faculty.toDTO() = FacultyDTO(
     id = this.id,
-    name = this.name,
-    groups = this.groups.map { it.toDTO() }
+    name = this.name
 )

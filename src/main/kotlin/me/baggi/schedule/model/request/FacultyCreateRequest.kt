@@ -1,4 +1,5 @@
 package me.baggi.schedule.model.request
 
-class FacultyCreateRequest {
-}
+data class FacultyCreateRequest(
+    val facultyName: String
+)

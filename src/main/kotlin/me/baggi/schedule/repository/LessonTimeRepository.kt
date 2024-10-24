@@ -1,4 +1,8 @@
 package me.baggi.schedule.repository
 
-interface LessonTime {
-}
+import me.baggi.schedule.model.LessonTime
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
+
+@Repository
+interface LessonTimeRepository : JpaRepository<LessonTime, Long>

@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 
-@Entity
+@Entity(name = "groups")
 data class Group(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,21 +17,17 @@ data class Group(
     val name: String,
     @ManyToOne
     @JoinColumn(name = "faculty_id")
-    val faculty: Faculty,
+    val faculty: Faculty? = null,
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL])
-    val schedules: List<Schedule> = emptyList()
+    val schedules: MutableList<ScheduleDay> = mutableListOf()
 )
 
 data class GroupDTO(
     val id: Long,
-    val name: String,
-    val facultyName: String,
-    val schedules: List<ScheduleDTO>
+    val name: String
 )
 
 fun Group.toDTO() = GroupDTO(
     id = this.id,
-    name = this.name,
-    facultyName = this.faculty.name,
-    schedules = this.schedules.map { it.toDTO() }
+    name = this.name
 )

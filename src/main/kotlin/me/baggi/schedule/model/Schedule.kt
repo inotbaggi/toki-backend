@@ -1,37 +1,33 @@
 package me.baggi.schedule.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.*
+import me.baggi.schedule.model.request.LessonPart
+import java.util.Date
 
-@Entity
-data class Schedule(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Entity(name = "schedule_days")
+data class ScheduleDay(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = -1,
-    val time: String,
-    val subject: String,
-    val teacherName: String,
-    val room: String,
+    val time: Date,
+    val intervalId: Long,
     @ManyToOne
     @JoinColumn(name = "group_id")
-    val group: Group
+    val group: Group,
+    @OneToMany(mappedBy = "scheduleDay", cascade = [CascadeType.ALL])
+    var lessons: MutableList<Lesson> = mutableListOf()
 )
 
-data class ScheduleDTO(
+data class ScheduleDayDTO(
     val id: Long,
-    val time: String,
-    val subject: String,
-    val teacherName: String,
-    val room: String
+    val intervalId: Long,
+    val time: Date,
+    val lessons: List<LessonDTO>
 )
 
-fun Schedule.toDTO() = ScheduleDTO(
+fun ScheduleDay.toDTO() = ScheduleDayDTO(
     id = this.id,
+    intervalId = this.intervalId,
     time = this.time,
-    subject = this.subject,
-    teacherName = this.teacherName,
-    room = this.room
+    lessons = this.lessons.map { it.toDTO() }
 )

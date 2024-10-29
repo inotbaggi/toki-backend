@@ -14,6 +14,8 @@ data class Lesson(
     @JoinColumn(name = "scheduleDay_id")
     val scheduleDay: ScheduleDay,
 
+    val lessonName: String,
+
     @ElementCollection
     val teachers: List<String>,
     @ElementCollection
@@ -21,17 +23,20 @@ data class Lesson(
 )
 
 data class LessonDTO(
+    val lessonName: String,
     val teachers: List<String>,
     val cabinets: List<String>
 )
 
 fun Lesson.toDTO() = LessonDTO(
     teachers = this.teachers,
-    cabinets = this.cabinets
+    cabinets = this.cabinets,
+    lessonName = this.lessonName,
 )
 
 fun LessonPart.toEntity(day: ScheduleDay) = Lesson(
     scheduleDay = day,
     teachers = this.teachers,
-    cabinets = this.cabinets
+    cabinets = this.cabinets,
+    lessonName = this.lessonName,
 )

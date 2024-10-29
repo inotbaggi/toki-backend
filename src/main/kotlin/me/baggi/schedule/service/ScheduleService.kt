@@ -34,6 +34,8 @@ class ScheduleService(
         }
     }
 
+    fun getTodayScheduleDayForGroup(groupId: Long): ScheduleDayDTO? = scheduleDaysRepository.getTodayScheduleDayForGroup(groupId)?.toDTO()
+
     fun getScheduleForDay(dayId: Long): ScheduleDay {
         return scheduleDaysRepository.findById(dayId).getOrNull()
             ?: throw Exception("ScheduleDay not found!")

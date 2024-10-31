@@ -6,12 +6,14 @@ import me.baggi.schedule.repository.GroupRepository
 import me.baggi.schedule.repository.LessonTimeRepository
 import me.baggi.schedule.repository.ScheduleDaysRepository
 import org.springframework.stereotype.Service
+import org.threeten.bp.LocalDate
+import java.util.Date
 import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ScheduleService(
     private val facultyService: FacultyService,
-    private val groupRepository: GroupRepository,
+    private val firebaseService: FirebaseService,
     private val scheduleDaysRepository: ScheduleDaysRepository,
     private val lessonTimeRepository: LessonTimeRepository
 ) {
@@ -31,6 +33,7 @@ class ScheduleService(
                 group.schedules.add(scheduleDay)
             }
             facultyService.saveFaculty(faculty)
+            firebaseService.sendNotification("schedule-update")
         }
     }
 
@@ -39,6 +42,12 @@ class ScheduleService(
     fun getScheduleForDay(dayId: Long): ScheduleDay {
         return scheduleDaysRepository.findById(dayId).getOrNull()
             ?: throw Exception("ScheduleDay not found!")
+    }
+
+    fun getSchedulesForWeek(): List<ScheduleDay> {
+        val start = LocalDate.now()
+        val end = start.plusDays(7)
+        return scheduleDaysRepository.findByDateRange(start, end)
     }
 
     fun createLessonTime(name: String, times: List<String>) {

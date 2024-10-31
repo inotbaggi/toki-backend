@@ -41,7 +41,7 @@ class ScheduleController(
 
     @GetMapping("/group/{groupId}/schedules")
     fun getSchedulesForGroup(@PathVariable groupId: Long, @RequestParam days: Int): List<ScheduleDayDTO> {
-        return emptyList()
+        return scheduleService.getSchedulesForWeek().map { it.toDTO() }
     }
 
     @GetMapping("/day/{dayId}")

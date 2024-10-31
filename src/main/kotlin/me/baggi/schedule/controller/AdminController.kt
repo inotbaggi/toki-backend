@@ -5,6 +5,7 @@ import me.baggi.schedule.model.request.GroupCreateRequest
 import me.baggi.schedule.model.request.LessonTimesCreateRequest
 import me.baggi.schedule.model.request.ScheduleCreateRequest
 import me.baggi.schedule.service.FacultyService
+import me.baggi.schedule.service.FirebaseService
 import me.baggi.schedule.service.ScheduleService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/admin")
 class AdminController(
     private val facultyService: FacultyService,
-    private val scheduleService: ScheduleService
+    private val scheduleService: ScheduleService,
+    private val firebaseService: FirebaseService
 ) {
     @PostMapping("/faculty/create")
     fun createFaculty(@RequestBody request: FacultyCreateRequest): ResponseEntity<Boolean> {
@@ -47,6 +49,11 @@ class AdminController(
             e.printStackTrace()
             ResponseEntity.internalServerError().body(false)
         }
+    }
+
+    @PostMapping("/notify/send")
+    fun sendNotify() {
+        firebaseService.sendNotification("schedule-update")
     }
 
     @PostMapping("/schedule/create")

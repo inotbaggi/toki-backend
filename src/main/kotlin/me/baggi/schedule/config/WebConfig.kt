@@ -15,10 +15,10 @@ class WebConfig(
     }
 
     override fun addCorsMappings(registry: CorsRegistry) {
-        registry.addMapping("/**") // Разрешить для всех путей
-            .allowedOrigins("http://localhost:3000") // Указать разрешённый origin
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Разрешить методы, включая OPTIONS
-            .allowedHeaders("*") // Разрешить любые заголовки
-            .allowCredentials(true) // Разрешить отправку куков
+        registry.addMapping("/**")
+            .allowedOrigins("https://admin.qubixmc.net")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true)
     }
 }

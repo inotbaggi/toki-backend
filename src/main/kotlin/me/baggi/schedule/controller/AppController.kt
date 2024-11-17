@@ -24,6 +24,7 @@ class AppController(
 
         val headers = HttpHeaders()
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.filename)
+        headers.add(HttpHeaders.CONTENT_LENGTH, file.contentAsByteArray.size.toString())
         return ResponseEntity.ok().headers(headers).body(file)
     }
 }

@@ -57,4 +57,8 @@ class ScheduleService(
     fun deleteLessonTime(id: Long) {
         lessonTimeRepository.deleteById(id)
     }
+
+    fun removeSchedule(id: Long) {
+        scheduleDaysRepository.deleteById(id)
+    }
 }

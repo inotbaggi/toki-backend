@@ -61,10 +61,19 @@ class AdminController(
         firebaseService.sendNotification("schedule-update")
     }
 
+
+
     @PostMapping("/schedule/create")
     fun createSchedule(@RequestBody request: ScheduleCreateRequest) {
         scheduleService.processScheduleCreating(request)
     }
+
+    @DeleteMapping("/schedule/delete/{id}")
+    fun deleteSchedule(@PathVariable id: Long) {
+        teacherService.removeTeacher(id)
+    }
+
+
 
     @PostMapping("/times/create")
     fun createTimes(@RequestBody request: LessonTimesCreateRequest) {
@@ -75,6 +84,8 @@ class AdminController(
     fun deleteTime(@PathVariable id: Long) {
         scheduleService.deleteLessonTime(id)
     }
+
+
 
     @PostMapping("/teacher/add")
     fun addTeacher(@RequestBody request: TeacherDTO): ResponseEntity<Boolean> {
@@ -100,6 +111,6 @@ class AdminController(
 
     @DeleteMapping("/teacher/delete/{id}")
     fun deleteTeacher(@PathVariable id: Long) {
-        teacherService.removeTeacher(id)
+        scheduleService.removeSchedule(id)
     }
 }

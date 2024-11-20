@@ -1,15 +1,14 @@
 package me.baggi.schedule.model
 
 import jakarta.persistence.*
-import me.baggi.schedule.model.request.LessonPart
-import java.util.Date
+import java.time.LocalDate
 
 @Entity(name = "schedule_days")
 data class ScheduleDay(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = -1,
-    val time: Date,
+    val time: LocalDate,
     val intervalId: Long,
     @ManyToOne
     @JoinColumn(name = "group_id")
@@ -21,7 +20,7 @@ data class ScheduleDay(
 data class ScheduleDayDTO(
     val id: Long,
     val intervalId: Long,
-    val time: Date,
+    val time: LocalDate,
     val lessons: List<LessonDTO>
 )
 

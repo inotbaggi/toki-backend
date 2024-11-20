@@ -1,10 +1,10 @@
 package me.baggi.schedule.model.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.Date
+import java.time.LocalDate
 
 data class ScheduleCreateRequest(
-    val date: Date,
+    val date: LocalDate,
     val intervalId: Long,
     val faculties: List<FacultyPart>
 )

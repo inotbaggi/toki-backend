@@ -2,7 +2,6 @@ package me.baggi.schedule.model
 
 import jakarta.persistence.*
 import me.baggi.schedule.model.request.LessonPart
-import java.util.*
 
 @Entity(name = "lessons")
 data class Lesson(

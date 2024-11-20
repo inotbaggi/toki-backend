@@ -2,12 +2,10 @@ package me.baggi.schedule.service
 
 import me.baggi.schedule.model.*
 import me.baggi.schedule.model.request.ScheduleCreateRequest
-import me.baggi.schedule.repository.GroupRepository
 import me.baggi.schedule.repository.LessonTimeRepository
 import me.baggi.schedule.repository.ScheduleDaysRepository
 import org.springframework.stereotype.Service
-import org.threeten.bp.LocalDate
-import java.util.Date
+import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
 @Service

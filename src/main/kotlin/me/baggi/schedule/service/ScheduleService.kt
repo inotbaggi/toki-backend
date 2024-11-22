@@ -1,7 +1,10 @@
 package me.baggi.schedule.service
 
+import me.baggi.schedule.exception.FacultyGroupNotFoundException
+import me.baggi.schedule.exception.FacultyNotFoundException
+import me.baggi.schedule.exception.ScheduleDayNotFoundException
 import me.baggi.schedule.model.*
-import me.baggi.schedule.model.request.ScheduleCreateRequest
+import me.baggi.schedule.model.request.ScheduleDayRequest
 import me.baggi.schedule.repository.LessonTimeRepository
 import me.baggi.schedule.repository.ScheduleDaysRepository
 import org.springframework.stereotype.Service
@@ -19,27 +22,33 @@ class ScheduleService(
         return scheduleDaysRepository.findAllByGroupId(groupId).map { it.toDTO() }
     }
 
-    fun processScheduleCreating(request: ScheduleCreateRequest) {
-        request.faculties.forEach {
-            val faculty = facultyService.getFacultyById(it.id).getOrNull()
-                ?: throw Exception("Faculty not found!")
-            it.groups.forEach { groupPart ->
+    fun processScheduleCreating(request: ScheduleDayRequest.CreateRequest) {
+        request.faculties.forEach { facultyPart ->
+            val faculty = facultyService.getFacultyById(facultyPart.id).getOrNull()
+                ?: throw FacultyNotFoundException(facultyPart.id)
+
+            facultyPart.groups.forEach { groupPart ->
                 val group = faculty.groups.find { it.id == groupPart.id }
-                    ?: throw Exception("Group ${groupPart.id} not found! (Faculty: ${it.id})")
+                    ?: throw FacultyGroupNotFoundException(groupPart.id)
+
                 val scheduleDay = ScheduleDay(time = request.date, group = group, intervalId = request.intervalId)
                 scheduleDay.lessons = groupPart.lessons.map { it.toEntity(scheduleDay) }.toMutableList()
+
                 group.schedules.add(scheduleDay)
             }
+
             facultyService.saveFaculty(faculty)
+
             firebaseService.sendNotification("schedule-update")
         }
     }
 
-    fun getTodayScheduleDayForGroup(groupId: Long): ScheduleDayDTO? = scheduleDaysRepository.getTodayScheduleDayForGroup(groupId)?.toDTO()
+    fun getTodayScheduleDayForGroup(groupId: Long): ScheduleDayDTO? =
+        scheduleDaysRepository.getTodayScheduleDayForGroup(groupId)?.toDTO()
 
     fun getScheduleForDay(dayId: Long): ScheduleDay {
         return scheduleDaysRepository.findById(dayId).getOrNull()
-            ?: throw Exception("ScheduleDay not found!")
+            ?: throw ScheduleDayNotFoundException(dayId)
     }
 
     fun getSchedulesForWeek(): List<ScheduleDay> {

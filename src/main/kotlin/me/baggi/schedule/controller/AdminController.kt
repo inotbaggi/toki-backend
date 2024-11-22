@@ -1,10 +1,7 @@
 package me.baggi.schedule.controller
 
 import me.baggi.schedule.model.TeacherDTO
-import me.baggi.schedule.model.request.FacultyCreateRequest
-import me.baggi.schedule.model.request.GroupCreateRequest
-import me.baggi.schedule.model.request.LessonTimesCreateRequest
-import me.baggi.schedule.model.request.ScheduleCreateRequest
+import me.baggi.schedule.model.request.*
 import me.baggi.schedule.service.FacultyService
 import me.baggi.schedule.service.FirebaseService
 import me.baggi.schedule.service.ScheduleService
@@ -24,7 +21,7 @@ class AdminController(
     private val teacherService: TeacherService
 ) {
     @PostMapping("/faculty/create")
-    fun createFaculty(@RequestBody request: FacultyCreateRequest): ResponseEntity<Boolean> {
+    fun createFaculty(@RequestBody request: FacultyRequest.Create): ResponseEntity<Boolean> {
         return try {
             facultyService.createFaculty(request.facultyName)
             ResponseEntity.ok(true)
@@ -46,7 +43,7 @@ class AdminController(
     }
 
     @PostMapping("/group/create")
-    fun createGroup(@RequestBody request: GroupCreateRequest): ResponseEntity<Boolean> {
+    fun createGroup(@RequestBody request: GroupRequest.Create): ResponseEntity<Boolean> {
         return try {
             facultyService.createGroup(request.facultyId, request.groupName)
             ResponseEntity.ok(true)
@@ -64,19 +61,19 @@ class AdminController(
 
 
     @PostMapping("/schedule/create")
-    fun createSchedule(@RequestBody request: ScheduleCreateRequest) {
+    fun createSchedule(@RequestBody request: ScheduleDayRequest.CreateRequest) {
         scheduleService.processScheduleCreating(request)
     }
 
     @DeleteMapping("/schedule/delete/{id}")
     fun deleteSchedule(@PathVariable id: Long) {
-        teacherService.removeTeacher(id)
+        scheduleService.removeSchedule(id)
     }
 
 
 
     @PostMapping("/times/create")
-    fun createTimes(@RequestBody request: LessonTimesCreateRequest) {
+    fun createTimes(@RequestBody request: LessonTimeRequest.Create) {
         scheduleService.createLessonTime(request.name, request.times)
     }
 
@@ -88,7 +85,7 @@ class AdminController(
 
 
     @PostMapping("/teacher/add")
-    fun addTeacher(@RequestBody request: TeacherDTO): ResponseEntity<Boolean> {
+    fun addTeacher(@RequestBody request: TeacherRequest.Create): ResponseEntity<Boolean> {
         return try {
             teacherService.addTeacher(request)
             ResponseEntity.ok(true)
@@ -111,6 +108,6 @@ class AdminController(
 
     @DeleteMapping("/teacher/delete/{id}")
     fun deleteTeacher(@PathVariable id: Long) {
-        scheduleService.removeSchedule(id)
+        teacherService.removeTeacher(id)
     }
 }

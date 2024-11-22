@@ -1,5 +1,6 @@
 package me.baggi.schedule.service
 
+import me.baggi.schedule.exception.FacultyNotFoundException
 import me.baggi.schedule.model.Faculty
 import me.baggi.schedule.model.Group
 import me.baggi.schedule.repository.FacultyRepository
@@ -25,7 +26,7 @@ class FacultyService(
     }
 
     fun createGroup(facultyId: Long, groupName: String) {
-        val faculty = getFacultyById(facultyId).getOrNull() ?: throw Exception("Faculty not found!")
+        val faculty = getFacultyById(facultyId).getOrNull() ?: throw FacultyNotFoundException(facultyId)
         faculty.groups.add(Group(name = groupName, faculty = faculty))
         facultyRepository.save(faculty)
     }
